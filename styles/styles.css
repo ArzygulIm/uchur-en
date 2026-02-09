@@ -20,7 +20,7 @@
   --pad: clamp(12px, 2.2vw, 18px);
 
   --orn-w: clamp(18px, 3vw, 28px);
-  --orn-url: url("images/ornament.png");
+  --orn-url: url("../images/ornament.png");
 
   /* card & media */
   --mediaH: clamp(220px, 36svh, 360px); /* ✅ адаптивная высота картинки */
@@ -534,3 +534,16 @@ body {
 /* ✅ На 1-2 странице принудительно прячем игру (таймер/картинку/Start) */
 #pageGame{ display:none !important; }
 .page.active#pageGame{ display:flex !important; } /* появится только когда она active */
+/* обычный вопрос */
+#qText{
+  transition: all .35s ease;
+}
+
+/* когда показываем ответ */
+#qText.answer{
+  font-size: clamp(28px, 5vw, 42px); /* 🔥 крупный */
+  font-weight: 1200;
+  color: #16a34a;                    /* зелёный */
+  letter-spacing: .5px;
+  transform: scale(1.05);
+}
