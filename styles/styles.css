@@ -1,0 +1,536 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  /* ==== COLORS ==== */
+  --bg1: #8b5cf6;
+  --bg2: #22c55e;
+  --bg3: #06b6d4;
+
+  --ink: #0f172a;
+  --muted: #475569;
+
+  /* ==== RESPONSIVE SIZES (главное) ==== */
+  --radius: clamp(14px, 2.2vw, 22px);
+  --shadow: 0 clamp(10px, 2.2vw, 18px) clamp(20px, 5vw, 45px)
+    rgba(2, 6, 23, 0.18);
+
+  --gap: clamp(10px, 1.6vw, 14px);
+  --pad: clamp(12px, 2.2vw, 18px);
+
+  --orn-w: clamp(18px, 3vw, 28px);
+  --orn-url: url("images/ornament.png");
+
+  /* card & media */
+  --mediaH: clamp(220px, 36svh, 360px); /* ✅ адаптивная высота картинки */
+  --btnMinH: clamp(56px, 8vw, 78px);
+
+  /* typography */
+  --h2: clamp(18px, 2.6vw, 22px);
+  --qText: clamp(18px, 3.2vw, 26px);
+  --p: clamp(14px, 2.2vw, 18px);
+  --btnText: clamp(16px, 2.6vw, 20px);
+  --meta: clamp(13px, 2.1vw, 16px);
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  padding: var(--pad);
+  display: flex;
+  justify-content: center;
+  color: var(--ink);
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial,
+    sans-serif;
+
+  background:
+    radial-gradient(
+      900px 500px at 15% 10%,
+      rgba(255, 255, 255, 0.55),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at 85% 15%,
+      rgba(255, 255, 255, 0.45),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at 50% 90%,
+      rgba(255, 255, 255, 0.35),
+      transparent 60%
+    ),
+    linear-gradient(135deg, var(--bg1), var(--bg2) 55%, var(--bg3));
+}
+
+.wrap {
+  width: min(92vw, 780px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* TOPBAR */
+.topbar {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(2, 6, 23, 0.08);
+  border-radius: var(--radius);
+  padding: clamp(10px, 1.8vw, 12px) clamp(12px, 2vw, 14px);
+  display: flex;
+  gap: clamp(8px, 1.6vw, 12px);
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1.6vw, 10px) clamp(12px, 2vw, 16px);
+  font-weight: 900;
+  font-size: var(--meta);
+}
+
+.actions {
+  display: flex;
+  gap: clamp(8px, 1.6vw, 10px);
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  border: none;
+  border-radius: clamp(12px, 2vw, 16px);
+  padding: clamp(9px, 1.6vw, 10px) clamp(12px, 2.1vw, 14px);
+  font-weight: 1000;
+  cursor: pointer;
+  color: #fff;
+  box-shadow: 0 clamp(6px, 1.6vw, 10px) clamp(12px, 3vw, 20px)
+    rgba(2, 6, 23, 0.12);
+  transition:
+    transform 0.12s ease,
+    filter 0.12s ease,
+    opacity 0.12s ease;
+  font-size: clamp(13px, 2.1vw, 15px);
+}
+.action-btn:hover {
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+}
+.action-btn:active {
+  transform: translateY(0);
+}
+.start {
+  background: #22c55e;
+}
+.next {
+  background: #3b82f6;
+}
+.reset {
+  background: #f97316;
+}
+.action-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+  box-shadow: none;
+}
+
+/* ORNAMENT FRAME */
+.orn-frame {
+  position: relative;
+  padding: 0 calc(var(--orn-w) + clamp(6px, 1.2vw, 10px));
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.orn-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    var(--orn-url) left top / var(--orn-w) auto repeat-y,
+    var(--orn-url) right top / var(--orn-w) auto repeat-y;
+}
+.orn-inner {
+  position: relative;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(2, 6, 23, 0.08);
+  border-radius: var(--radius);
+  padding: clamp(12px, 2vw, 16px);
+  box-shadow: var(--shadow);
+}
+
+/* PAGES */
+.page {
+  display: none;
+}
+.page.active {
+  display: block;
+}
+
+.page h2 {
+  margin: 0 0 clamp(6px, 1.3vw, 10px);
+  font-size: var(--h2);
+  font-weight: 1100;
+}
+.page div,
+.page small {
+  font-size: var(--p);
+  line-height: 1.5;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1.6vw, 10px) clamp(10px, 2vw, 12px);
+  align-items: center;
+  margin-top: clamp(10px, 1.8vw, 12px);
+}
+label {
+  font-weight: 900;
+}
+
+select {
+  padding: clamp(8px, 1.6vw, 10px) clamp(10px, 2vw, 12px);
+  border-radius: clamp(10px, 1.8vw, 14px);
+  border: 1px solid rgba(2, 6, 23, 0.14);
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+  font-weight: 900;
+  box-shadow: 0 clamp(6px, 1.6vw, 10px) clamp(12px, 3vw, 20px)
+    rgba(2, 6, 23, 0.06);
+  font-size: clamp(13px, 2.1vw, 15px);
+}
+
+/* TIMER */
+.timer {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(2, 6, 23, 0.08);
+  border-radius: var(--radius);
+  padding: clamp(8px, 1.6vw, 10px) clamp(10px, 2vw, 12px);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 12px);
+  box-shadow: var(--shadow);
+  margin-bottom: clamp(8px, 1.6vw, 12px);
+}
+.time-label {
+  font-weight: 1100;
+  min-width: clamp(56px, 10vw, 70px);
+  text-align: center;
+  font-size: clamp(13px, 2.2vw, 16px);
+}
+.bar {
+  height: clamp(10px, 1.8vw, 12px);
+  width: 100%;
+  background: rgba(2, 6, 23, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar > div {
+  height: 100%;
+  width: 100%;
+  background: #22c55e;
+  transform-origin: left center;
+  transform: scaleX(1);
+  transition: transform 0.05s linear;
+}
+
+/* CARD */
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(2, 6, 23, 0.08);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.media {
+  width: 100%;
+  border-bottom: 1px solid rgba(2, 6, 23, 0.08);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(10px, 1.8vw, 12px);
+  min-height: var(--mediaH);
+}
+
+#qImg {
+  width: 100%;
+  height: var(--mediaH);
+  object-fit: contain;
+  background: #fff;
+  display: block;
+
+  opacity: 0;
+  transform: translateY(22px) scale(0.92);
+  filter: drop-shadow(0 16px 30px rgba(2, 6, 23, 0.14));
+}
+
+.content {
+  padding: clamp(12px, 2vw, 14px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.8vw, 14px);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(255, 255, 255, 0.92)
+  );
+}
+
+#qText {
+  font-size: var(--qText);
+  font-weight: 1100;
+  line-height: 1.15;
+  text-align: center;
+}
+
+#options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 1.8vw, 12px);
+
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.btn {
+  border: 2px solid rgba(2, 6, 23, 0.12);
+  background: #fff;
+  color: var(--ink);
+  border-radius: clamp(14px, 2.2vw, 18px);
+  padding: clamp(10px, 1.8vw, 12px) clamp(8px, 1.6vw, 10px);
+  min-height: var(--btnMinH);
+  font-size: var(--btnText);
+  font-weight: 1100;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 12px 22px rgba(2, 6, 23, 0.08);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.12s ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(2, 6, 23, 0.1);
+  border-color: rgba(59, 130, 246, 0.45);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn.correct {
+  background: rgba(34, 197, 94, 0.14);
+  border-color: rgba(34, 197, 94, 0.85);
+}
+.btn.wrong {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.85);
+}
+
+.center-row {
+  display: flex;
+  justify-content: center;
+}
+
+/* ANIMATIONS */
+@keyframes popUp {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.img-animate {
+  animation: popUp 0.45s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+}
+.opts-animate {
+  animation: fadeUp 0.35s ease forwards;
+  animation-delay: 0.1s;
+}
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pad);
+}
+.modal-backdrop.show {
+  display: flex;
+}
+.modal {
+  width: min(92vw, 520px);
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid rgba(2, 6, 23, 0.1);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(2, 6, 23, 0.28);
+}
+.modal-header {
+  padding: clamp(12px, 2vw, 14px) clamp(12px, 2vw, 16px);
+  font-size: clamp(16px, 2.6vw, 20px);
+  font-weight: 1100;
+  border-bottom: 1px solid rgba(2, 6, 23, 0.1);
+  background: linear-gradient(
+    90deg,
+    rgba(59, 130, 246, 0.18),
+    rgba(34, 197, 94, 0.18)
+  );
+}
+.modal-body {
+  padding: clamp(12px, 2vw, 14px) clamp(12px, 2vw, 16px);
+  font-size: clamp(15px, 2.4vw, 18px);
+  line-height: 1.4;
+}
+.modal-actions {
+  padding: clamp(12px, 2vw, 14px) clamp(12px, 2vw, 16px);
+  display: flex;
+  gap: clamp(8px, 1.6vw, 10px);
+  justify-content: flex-end;
+  border-top: 1px solid rgba(2, 6, 23, 0.1);
+  background: rgba(2, 6, 23, 0.03);
+}
+
+/* На узких экранах кнопки в одну колонку */
+@media (max-width: 560px) {
+  #options {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ✅ 1) Убираем скролл страницы */
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* главное */
+}
+
+/* ✅ 2) Контент всегда влезает в экран */
+body {
+  min-height: 100svh;
+  padding: clamp(8px, 1.5vw, 14px); /* меньше паддинг, чтобы всё влезало */
+}
+
+/* ✅ 3) .wrap занимает весь экран и распределяет блоки по высоте */
+.wrap {
+  height: calc(100svh - (2 * clamp(8px, 1.5vw, 14px)));
+  width: min(92vw, 780px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.2vw, 12px);
+}
+
+/* ✅ чтобы орнаментный блок тоже растягивался и не вылезал */
+.orn-frame {
+  flex: 1;
+  min-height: 0;
+}
+.orn-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ✅ страница (page) растягивается и не вываливается */
+.page.active {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ✅ 4) В игре карточка занимает остаток и сжимается */
+#pageGame {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.timer {
+  flex: 0 0 auto;
+  margin-bottom: clamp(8px, 1.2vw, 12px);
+}
+
+.card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ✅ 5) Картинка занимает доступное место без переполнения */
+.media {
+  flex: 1;
+  min-height: 0;
+  padding: clamp(8px, 1.2vw, 12px);
+}
+
+#qImg {
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ✅ 6) Низ карточки (текст+ответы) не раздувает экран */
+.content {
+  flex: 0 0 auto;
+  padding: clamp(10px, 1.5vw, 14px);
+  gap: clamp(8px, 1.2vw, 12px);
+}
+
+#qText {
+  font-size: clamp(18px, 2.6vw, 24px);
+}
+
+/* ответы компактнее */
+.btn {
+  min-height: clamp(54px, 7vw, 72px);
+  font-size: clamp(16px, 2.2vw, 18px);
+}
+
+/* на больших экранах можно оставить 3 колонки, на маленьких 1 */
+@media (max-width: 560px) {
+  #options {
+    grid-template-columns: 1fr;
+  }
+}
+/* ✅ На 1-2 странице принудительно прячем игру (таймер/картинку/Start) */
+#pageGame{ display:none !important; }
+.page.active#pageGame{ display:flex !important; } /* появится только когда она active */

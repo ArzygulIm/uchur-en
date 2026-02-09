@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Kids Quiz</title>
+
+    <link rel="stylesheet" href="styles/styles.css" />
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="meta">
+          <span id="stageInfo">Stage: First page</span>
+          <span id="qInfo">Question 0 / 0</span>
+          <span id="scoreInfo">Score: 0</span>
+        </div>
+        <div class="actions">
+          <button class="action-btn next" id="btnNextPage">Next</button>
+          <button class="action-btn reset" id="btnStartOver">Start over</button>
+        </div>
+      </div>
+
+      <!-- PAGE 1 (wrapped with ornament) -->
+      <div class="orn-frame">
+        <div class="orn-inner">
+          <div class="page" id="page1">
+            <h2>Plan for the English Friday Activity</h2>
+            <div>• Self-introduction</div>
+            <div>• Song performance by Grades 1–2</div>
+            <div>• Educational game for Grades 1–2</div>
+            <div class="row">
+              <small style="color: var(--muted)"
+                >Press <b>Next</b> to continue.</small
+              >
+            </div>
+          </div>
+
+          <!-- PAGE 2 -->
+          <div class="page" id="page2">
+            <h2>Game Rules</h2>
+            <div>
+              Pictures are shown to the students. The student who presses the
+              bell first and correctly names the picture in English receives a
+              point.
+            </div>
+
+            <div class="row" style="margin-top: 16px">
+              <label for="timeSelect">Time per question:</label>
+              <select id="timeSelect">
+                <option value="3000">3 seconds</option>
+                <option value="5000" selected>5 seconds</option>
+                <option value="7000">7 seconds</option>
+                <option value="10000">10 seconds</option>
+                <option value="15000">15 seconds</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label for="countSelect">Number of questions:</label>
+              <select id="countSelect">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <small style="color: var(--muted)"
+                >Choose settings, then press <b>Next</b> to start the
+                game.</small
+              >
+            </div>
+          </div>
+
+          <!-- GAME -->
+          <div class="page" id="pageGame">
+            <div class="timer">
+              <div class="time-label" id="timeInfo">5.0s</div>
+              <div class="bar"><div id="timeBar"></div></div>
+            </div>
+
+            <div class="card">
+              <div class="media">
+                <img id="qImg" alt="" />
+              </div>
+              <div class="content">
+                <div id="qText">Press “Start”</div>
+                <div id="options"></div>
+                <div class="center-row">
+                  <button class="action-btn start" id="btnStartGame">
+                    Start
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT MODAL -->
+    <div class="modal-backdrop" id="resultModal">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <div class="modal-header" id="modalTitle">Results</div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-actions">
+          <button class="action-btn reset" id="modalStartOver">
+            Start over
+          </button>
+          <button class="action-btn next" id="modalClose">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // =========================
+      // DATA
+      // =========================
+      const QUESTIONS_ALL = [
+        {
+          text: "What is this?",
+          img: "images/ant.png",
+          options: ["Ant", "Bee", "Dog"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/apple.png",
+          options: ["Apple", "Ball", "Cat"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/ball.png",
+          options: ["Ball", "Car", "Duck"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/bee.png",
+          options: ["Bee", "Ant", "Bird"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/bird.png",
+          options: ["Bird", "Cat", "Dog"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/boy.png",
+          options: ["Boy", "Girl", "Man"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/car.png",
+          options: ["Car", "Bus", "Plane"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/cat.png",
+          options: ["Cat", "Dog", "Goat"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/crocodile.png",
+          options: ["Crocodile", "Snake", "Lizard"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/dog.png",
+          options: ["Dog", "Cat", "Horse"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/duck.png",
+          options: ["Duck", "Bird", "Goose"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/ears.png",
+          options: ["Ears", "Eyes", "Nose"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/egg.png",
+          options: ["Egg", "Apple", "Ball"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/elephant.png",
+          options: ["Elephant", "Horse", "Lion"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/eyes.png",
+          options: ["Eyes", "Ears", "Nose"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/flower.png",
+          options: ["Flower", "Tree", "Leaf"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/frog.png",
+          options: ["Frog", "Duck", "Fish"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/girl.png",
+          options: ["Girl", "Boy", "Woman"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/goat.png",
+          options: ["Goat", "Sheep", "Horse"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/guitar.png",
+          options: ["Guitar", "Piano", "Drum"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/hand.png",
+          options: ["Hand", "Leg", "Foot"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/house.png",
+          options: ["House", "School", "Shop"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/helicopter.png",
+          options: ["Helicopter", "Plane", "Car"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/horse.png",
+          options: ["Horse", "Cow", "Goat"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/jellyfish.png",
+          options: ["Jellyfish", "Fish", "Octopus"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/kangaroo.png",
+          options: ["Kangaroo", "Bear", "Lion"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/key.png",
+          options: ["Key", "Lock", "Door"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/lion.png",
+          options: ["Lion", "Tiger", "Cat"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/lollipop.png",
+          options: ["Lollipop", "Candy", "Ice cream"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/nose.png",
+          options: ["Nose", "Eyes", "Ears"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/panda.png",
+          options: ["Panda", "Bear", "Koala"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/pineapple.png",
+          options: ["Pineapple", "Apple", "Banana"],
+          correctIndex: 0,
+        },
+        {
+          text: "What is this?",
+          img: "images/plane.png",
+          options: ["Plane", "Helicopter", "Car"],
+          correctIndex: 0,
+        },
+      ];
+
+      // =========================
+      // STORAGE
+      // =========================
+      const STORAGE_KEY = "kids_quiz_state_v4";
+      const saveState = (s) =>
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+      const loadState = () => {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch {
+          return null;
+        }
+      };
+      const clearState = () => localStorage.removeItem(STORAGE_KEY);
+
+      // =========================
+      // HELPERS
+      // =========================
+      const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+      function shuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+      function prepareQuestion(q) {
+        const correctText = q.options[q.correctIndex];
+        const shuffled = shuffle(q.options);
+        return {
+          text: q.text,
+          img: q.img,
+          options: shuffled,
+          correctIndex: shuffled.indexOf(correctText),
+        };
+      }
+
+      // =========================
+      // DOM
+      // =========================
+      const stageInfo = document.getElementById("stageInfo");
+      const qInfo = document.getElementById("qInfo");
+      const scoreInfo = document.getElementById("scoreInfo");
+
+      const page1 = document.getElementById("page1");
+      const page2 = document.getElementById("page2");
+      const pageGame = document.getElementById("pageGame");
+
+      const btnNextPage = document.getElementById("btnNextPage");
+      const btnStartOver = document.getElementById("btnStartOver");
+
+      const timeSelect = document.getElementById("timeSelect");
+      const countSelect = document.getElementById("countSelect");
+
+      const btnStartGame = document.getElementById("btnStartGame");
+
+      const timeInfo = document.getElementById("timeInfo");
+      const timeBar = document.getElementById("timeBar");
+      const qImg = document.getElementById("qImg");
+      const qText = document.getElementById("qText");
+      const optionsEl = document.getElementById("options");
+
+      const resultModal = document.getElementById("resultModal");
+      const modalBody = document.getElementById("modalBody");
+      const modalClose = document.getElementById("modalClose");
+      const modalStartOver = document.getElementById("modalStartOver");
+
+      // =========================
+      // APP STATE
+      // =========================
+      let app = {
+        stage: 1,
+        settings: { timeLimitMs: 5000, questionsCount: 10 },
+        game: {
+          started: false,
+          idx: 0,
+          score: 0,
+          wrong: 0,
+          locked: false,
+          questions: [],
+        },
+      };
+
+      let timerId = null;
+      let startTs = 0;
+
+      function stopTimer() {
+        if (timerId) clearInterval(timerId);
+        timerId = null;
+      }
+      function setBar(progress01) {
+        timeBar.style.transform = `scaleX(${clamp(progress01, 0, 1)})`;
+      }
+      function setTimeLabel(msLeft) {
+        timeInfo.textContent = `${(msLeft / 1000).toFixed(1)}s`;
+      }
+      function lockOptions(value) {
+        app.game.locked = value;
+        optionsEl
+          .querySelectorAll("button")
+          .forEach((b) => (b.disabled = value));
+      }
+
+      function renderMeta() {
+        const total = app.game.questions.length || 0;
+        const current = app.game.started
+          ? Math.min(app.game.idx + 1, total)
+          : 0;
+
+        stageInfo.textContent =
+          app.stage === 1
+            ? "Stage: First page"
+            : app.stage === 2
+              ? "Stage: Rules / Settings"
+              : "Stage: Game";
+
+        qInfo.textContent = `Question ${current} / ${total}`;
+        scoreInfo.textContent = `Score: ${app.game.score}`;
+      }
+
+      function showStage(stage) {
+        app.stage = stage;
+        page1.classList.toggle("active", stage === 1);
+        page2.classList.toggle("active", stage === 2);
+        pageGame.classList.toggle("active", stage === 3);
+        btnNextPage.disabled = stage === 3;
+        renderMeta();
+        saveState(app);
+      }
+
+      // =========================
+      // ANIMATION TRIGGERS
+      // =========================
+      function resetAnimations() {
+        qImg.classList.remove("img-animate");
+        optionsEl.classList.remove("opts-animate");
+        qImg.style.opacity = "0";
+        qImg.style.transform = "translateY(22px) scale(.92)";
+        optionsEl.style.opacity = "0";
+        optionsEl.style.transform = "translateY(10px)";
+      }
+      function playAnimations() {
+        void qImg.offsetWidth;
+        qImg.classList.add("img-animate");
+        optionsEl.classList.add("opts-animate");
+      }
+
+      // =========================
+      // GAME
+      // =========================
+      function buildGameQuestions() {
+        const n = clamp(app.settings.questionsCount, 1, QUESTIONS_ALL.length);
+        const picked = shuffle(QUESTIONS_ALL).slice(0, n);
+        app.game.questions = picked.map(prepareQuestion);
+        app.game.idx = 0;
+        app.game.score = 0;
+        app.game.wrong = 0;
+        app.game.started = false;
+        app.game.locked = false;
+        saveState(app);
+      }
+
+      function startTimerForQuestion() {
+        stopTimer();
+        const TIME = app.settings.timeLimitMs;
+
+        startTs = Date.now();
+        setBar(1);
+        setTimeLabel(TIME);
+
+        timerId = setInterval(() => {
+          const elapsed = Date.now() - startTs;
+          const left = TIME - elapsed;
+
+          setTimeLabel(Math.max(0, left));
+          setBar(1 - elapsed / TIME);
+
+          if (left <= 0) {
+            stopTimer();
+            onTimeout();
+          }
+        }, 50);
+      }
+
+      function highlightCorrect() {
+        const q = app.game.questions[app.game.idx];
+        optionsEl.querySelectorAll("button").forEach((b, i) => {
+          if (i === q.correctIndex) b.classList.add("correct");
+        });
+      }
+
+      function showQuestion() {
+        renderMeta();
+        resetAnimations();
+
+        const q = app.game.questions[app.game.idx];
+
+        qText.textContent = q.text;
+        qImg.alt = q.text;
+
+        qImg.onload = () => {
+          resetAnimations();
+          playAnimations();
+        };
+        qImg.src = q.img;
+
+        optionsEl.innerHTML = "";
+        q.options.forEach((opt, i) => {
+          const b = document.createElement("button");
+          b.className = "btn";
+          b.textContent = `${String.fromCharCode(65 + i)}) ${opt}`;
+          b.addEventListener("click", () => choose(i));
+          optionsEl.appendChild(b);
+        });
+
+        lockOptions(false);
+        startTimerForQuestion();
+        saveState(app);
+      }
+
+      function choose(choiceIndex) {
+        if (!app.game.started || app.game.locked) return;
+
+        lockOptions(true);
+        stopTimer();
+
+        const q = app.game.questions[app.game.idx];
+        const btns = optionsEl.querySelectorAll("button");
+        const isCorrect = choiceIndex === q.correctIndex;
+
+        if (isCorrect) {
+          app.game.score += 1;
+          btns[choiceIndex].classList.add("correct");
+        } else {
+          app.game.wrong += 1;
+          btns[choiceIndex].classList.add("wrong");
+          highlightCorrect();
+        }
+
+        renderMeta();
+        saveState(app);
+        setTimeout(nextQuestion, 650);
+      }
+
+      function onTimeout() {
+        lockOptions(true);
+        highlightCorrect();
+        app.game.wrong += 1;
+        saveState(app);
+        setTimeout(nextQuestion, 650);
+      }
+
+      function nextQuestion() {
+        stopTimer();
+        app.game.idx += 1;
+        if (app.game.idx >= app.game.questions.length) {
+          finishGame();
+          return;
+        }
+        showQuestion();
+      }
+
+      function resetGameUI() {
+        stopTimer();
+        optionsEl.innerHTML = "";
+        qText.textContent = "Press “Start”";
+        qImg.removeAttribute("src");
+        qImg.alt = "";
+        setBar(1);
+        setTimeLabel(app.settings.timeLimitMs);
+        renderMeta();
+        resetAnimations();
+      }
+
+      function finishGame() {
+        stopTimer();
+        lockOptions(true);
+
+        const total = app.game.questions.length;
+        const correct = app.game.score;
+        const wrong = app.game.wrong;
+
+        modalBody.innerHTML = `
+        <div><b>Correct:</b> ${correct}</div>
+        <div><b>Wrong:</b> ${wrong}</div>
+        <div style="margin-top:10px;opacity:.85">Total questions: ${total}</div>
+      `;
+        resultModal.classList.add("show");
+
+        app.game.started = false;
+        app.game.idx = 0;
+        app.game.locked = false;
+        saveState(app);
+
+        resetGameUI();
+      }
+
+      // =========================
+      // EVENTS
+      // =========================
+      btnNextPage.addEventListener("click", () => {
+        if (app.stage === 1) {
+          showStage(2);
+          return;
+        }
+        if (app.stage === 2) {
+          app.settings.timeLimitMs = parseInt(timeSelect.value, 10);
+          app.settings.questionsCount = parseInt(countSelect.value, 10);
+          saveState(app);
+
+          buildGameQuestions();
+          resetGameUI();
+          showStage(3);
+          return;
+        }
+      });
+
+      timeSelect.addEventListener("change", () => {
+        app.settings.timeLimitMs = parseInt(timeSelect.value, 10);
+        saveState(app);
+        setTimeLabel(app.settings.timeLimitMs);
+        setBar(1);
+      });
+
+      countSelect.addEventListener("change", () => {
+        app.settings.questionsCount = parseInt(countSelect.value, 10);
+        saveState(app);
+      });
+
+      btnStartGame.addEventListener("click", () => {
+        if (app.stage !== 3) return;
+        buildGameQuestions(); // новый рандом каждый раз
+        resetGameUI();
+        app.game.started = true;
+        saveState(app);
+        showQuestion();
+      });
+
+      btnStartOver.addEventListener("click", () => {
+        clearState();
+        location.reload();
+      });
+
+      modalClose.addEventListener("click", () => {
+        resultModal.classList.remove("show");
+      });
+
+      modalStartOver.addEventListener("click", () => {
+        clearState();
+        location.reload();
+      });
+
+      // =========================
+      // INIT
+      // =========================
+      (function init() {
+        const saved = loadState();
+        if (saved) {
+          app = saved;
+
+          if (app.settings?.timeLimitMs)
+            timeSelect.value = String(app.settings.timeLimitMs);
+          if (app.settings?.questionsCount)
+            countSelect.value = String(app.settings.questionsCount);
+
+          setTimeLabel(app.settings.timeLimitMs || 5000);
+          setBar(1);
+
+          showStage(app.stage);
+
+          if (app.stage === 3) {
+            resetGameUI();
+            if (app.game?.started && app.game.questions?.length) {
+              showQuestion();
+            }
+          }
+        } else {
+          saveState(app);
+          timeSelect.value = "5000";
+          countSelect.value = "10";
+          showStage(1);
+          resetGameUI();
+        }
+      })();
+    </script>
+  </body>
+</html>
